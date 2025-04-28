@@ -1,0 +1,14 @@
+.MuiInputBase-root fieldset {
+    border-radius: 10px !important;
+}
+
+body {
+    /* background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; */
+}
+
+
+.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #7152F3 !important
+}
