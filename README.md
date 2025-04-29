@@ -5,7 +5,7 @@ A simple, reusable React Chat Component!
 ## Install
 
 ```bash
-npm install your-chat-sdk
+npm install react-chat-sdk
 # or
-yarn add your-chat-sdk
+yarn add react-chat-sdk
 ```
