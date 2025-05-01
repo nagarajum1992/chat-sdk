@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import OpenAIUI from "../../OpenAIUI/AnimatedMarkdown";
+import AnimatedMarkdown from "./AnimatedMarkdown";
 
-export default function ChatCard({ chatData, scrollRef }: any) {
+export default function ChatCard({ chatData, scrollRef, userId }: any) {
   const isReply = chatData?.user_type === "user";
 
   return (
@@ -31,10 +31,11 @@ export default function ChatCard({ chatData, scrollRef }: any) {
             </div>
 
             <div>
-              <OpenAIUI
+              <AnimatedMarkdown
                 openAiData={chatData?.message}
                 isnewMessage={chatData?.isNewmessage}
                 scrollRef={scrollRef}
+                userId={userId}
               />
             </div>
           </Box>

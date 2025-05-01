@@ -3,7 +3,12 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 
-const AnimatedMarkdown = ({ openAiData, isnewMessage, scrollRef }) => {
+const AnimatedMarkdown = ({
+  openAiData,
+  userId,
+  isnewMessage = false,
+  scrollRef = null,
+}) => {
   const [displayedText, setDisplayedText] = useState("");
 
   useEffect(() => {
@@ -39,6 +44,50 @@ const AnimatedMarkdown = ({ openAiData, isnewMessage, scrollRef }) => {
       setDisplayedText(formatted);
     }
   }, [openAiData, isnewMessage]);
+
+  const redirectToURL = (href) => {
+    if (href.includes("jap-sb.soham")) {
+      const dashboard2 = window.open(href, "_blank");
+
+      if (!dashboard2) {
+        alert("Popup blocked! Please allow popups for this site.");
+        return;
+      }
+
+      const sendAuthData = () => {
+        dashboard2.postMessage(
+          {
+            userId: userId,
+          },
+          new URL(href).origin // safer and more accurate than href string
+        );
+        console.log(`postMessage to url: ${href}`, {
+          userId: userId,
+        });
+      };
+
+      // Retry message after window loads
+      const interval = setInterval(() => {
+        try {
+          if (dashboard2 && dashboard2.closed) {
+            clearInterval(interval);
+            return;
+          }
+
+          // Test access to contentWindow – triggers error if still loading or cross-origin
+          dashboard2?.postMessage && sendAuthData();
+          clearInterval(interval);
+        } catch (e) {
+          // wait for window to be ready
+        }
+      }, 500);
+
+      // Just in case, timeout after 10s
+      setTimeout(() => clearInterval(interval), 10000);
+    } else {
+      window.open(href, "_blank");
+    }
+  };
 
   return (
     <div style={{ fontFamily: "Manrope" }}>
@@ -94,7 +143,7 @@ const AnimatedMarkdown = ({ openAiData, isnewMessage, scrollRef }) => {
           a: ({ href }) => (
             <div style={{ marginTop: "1em" }}>
               <button
-                onClick={() => window.open(href, "_blank")}
+                onClick={() => redirectToURL(href)}
                 style={{
                   backgroundColor: "#7152F3",
                   color: "white",

@@ -4,22 +4,19 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { Box } from "@mui/material";
 import { ChatComponentProps } from "models/IChatComponent";
-import useStyles from "./styles";
 
 dayjs.extend(utc);
 dayjs.utc();
 
 export default function ChatComponent({ ...props }: ChatComponentProps) {
-  const classes = useStyles();
-
   return (
-    <Box className={classes.mainBg}>
+    <Box className="mainBg">
       <img
         alt="signup background"
-        src={`/assets/chatBg.png`}
-        className={classes.animatedBlurBg}
+        src="/assets/chatBg.png"
+        className="animatedBlurBg"
       />
-      <div className={classes.overlay} />
+      <div className="overlay" />
       <Feed {...props} />
     </Box>
   );

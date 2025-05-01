@@ -18,7 +18,9 @@ class ChatService {
       formData.append("order", order);
 
       const data = await axiosClient.post(options.serverUrl, formData, {
-        ...options.headers,
+        headers: {
+          ...options.headers,
+        },
       });
 
       if (data.status === 200) {

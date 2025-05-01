@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import LottiesAnimation from "../Common/LottiesAnimation";
-import messageLoadsJson from "../Common/AnimationJSONs/messageNewLoader.json";
+import LottiesAnimation from "../Loaders/LottiesAnimation";
+import messageLoadsJson from "../Loaders/messageNewLoader.json";
 
 export default function ChatLoading() {
   return (

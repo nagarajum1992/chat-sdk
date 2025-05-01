@@ -2,11 +2,10 @@ import { Typography, Box } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import toast from "react-hot-toast";
-import ChatLoading from "../../../Common/ChatLoading";
-import useStyles from "../../styles";
+import ChatLoading from "../../../Loaders/ChatLoading";
 import ChatCard from "./ChatCard";
 import AudoVisualiser from "../../../VoiceRecorder/AudoVisualiser";
-import BouncingDotsLoader from "../../../Common/DotsLoading";
+import BouncingDotsLoader from "../../../Loaders/DotsLoading";
 import { ChatComponentProps } from "models/IChatComponent";
 import chatService from "../../../../services/chatService";
 
@@ -17,7 +16,6 @@ export default function ChatFeed({
   entityId,
   userName,
 }: ChatComponentProps) {
-  const classes = useStyles();
   const [message, setMessage] = useState<any>({
     language_code: "",
     provider: "",
@@ -46,32 +44,64 @@ export default function ChatFeed({
     isLoading: false,
   });
   const [chatList, setChaList] = useState<any[]>([]);
+  const retryCount = useRef(0);
+  const reconnectTimeout = useRef<any>(null);
+  const messageQueue = useRef<string[]>([]);
+  const reconnectInterval = 2000;
+  const maxRetries = 10;
 
-  useEffect(() => {
-    if (!userId) return;
+  const connect = () => {
+    if (!userId || retryCount.current > maxRetries) return;
 
     ws.current = new WebSocket(serverUrl.webSocketURL);
 
     ws.current.onopen = () => {
       console.log("✅ WebSocket connected");
+      toast.success("Connected");
+      retryCount.current = 0;
       setConnected(true);
-    };
 
-    ws.current.onclose = () => {
-      console.log("❌ WebSocket disconnected");
-      setConnected(false);
-    };
-
-    ws.current.onerror = (err) => {
-      console.error("⚠️ WebSocket error:", err);
+      // Flush message queue
+      while (
+        messageQueue.current.length > 0 &&
+        ws.current?.readyState === WebSocket.OPEN
+      ) {
+        const msg = messageQueue.current.shift();
+        if (msg) ws.current.send(msg);
+      }
     };
 
     ws.current.onmessage = (msg) => {
       setLastMessage(msg);
     };
 
+    ws.current.onclose = () => {
+      console.log("❌ WebSocket disconnected");
+      toast.error("Disconnected");
+      setConnected(false);
+      scheduleReconnect();
+    };
+
+    ws.current.onerror = (err) => {
+      console.error("⚠️ WebSocket error:", err);
+      ws.current?.close();
+    };
+  };
+
+  const scheduleReconnect = () => {
+    retryCount.current += 1;
+    if (retryCount.current <= maxRetries) {
+      reconnectTimeout.current = setTimeout(connect, reconnectInterval);
+    } else {
+      console.warn("⚠️ Max reconnect attempts reached");
+    }
+  };
+
+  useEffect(() => {
+    connect();
     return () => {
       ws.current?.close();
+      if (reconnectTimeout.current) clearTimeout(reconnectTimeout.current);
     };
   }, []);
 
@@ -109,10 +139,12 @@ export default function ChatFeed({
   }, [lastMessage]);
 
   useEffect(() => {
+    debugger;
     if (chatHistory?.history?.length > 0) {
-      chatHistory?.history.forEach((chat: any) => {
-        setChaList([...chatList, chat]);
-      });
+      const newChatList = chatHistory?.history.map((chat: any) => ({
+        ...chat,
+      }));
+      setChaList([...chatList, ...newChatList]);
       if (chatHistory?.history?.length < 10) {
         setHasMore(false);
       }
@@ -127,7 +159,7 @@ export default function ChatFeed({
         headers: headers,
       })
       .then((res) => {
-        setChatHistory({ ...chatHistory, history: res.history });
+        setChatHistory({ ...chatHistory, history: res.data.history });
       })
       .catch((err) => console.log(err));
   };
@@ -320,6 +352,7 @@ export default function ChatFeed({
                 frStatus={""}
                 chatData={eachMessage}
                 scrollRef={messageRef}
+                userId={userId}
               />
             ))}
           {(loading || chatHistory.isLoading) && <ChatLoading />}
@@ -338,21 +371,7 @@ export default function ChatFeed({
             justifyContent: "center",
           }}
         >
-          <form
-            className={classes.form}
-            style={{
-              width: "98%",
-              display: "flex",
-              alignItems: "center",
-              transition: "transform 0.2s ease-in-out",
-              position: "absolute",
-              bottom: 0,
-              // left: "30px",
-              border: "1px solid #252574",
-              background: "#000",
-              boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset",
-            }}
-          >
+          <form className="form-input">
             <textarea
               onInput={handleInput}
               ref={inputRef}

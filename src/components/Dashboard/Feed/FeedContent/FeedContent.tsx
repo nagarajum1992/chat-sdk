@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Box } from "@mui/material";
 import ChatCard from "./ChatCard";
-import Loading from "../../../Common/Loading";
+import Loading from "../../../Loaders/Loading";
 
 export default function FeedContent({ messagesList, loading }: any) {
   const chatEndRef = useRef<HTMLDivElement | null>(null);

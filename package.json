@@ -9,16 +9,20 @@
     "dist"
   ],
   "scripts": {
-    "dev": "yarn storybook",
-    "build": "vite build",
+    "dev": "vite",
+    "build": "BUILD=true vite build",
     "types": "tsc --emitDeclarationOnly",
     "prepare": "yarn build && yarn types",
     "storybook": "storybook dev -p 7007",
     "build-storybook": "storybook build"
   },
   "peerDependencies": {
-    "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "resolutions": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^8.6.12",
