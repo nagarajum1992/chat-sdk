@@ -10,9 +10,11 @@ npm install react-chat-sdk
 yarn add react-chat-sdk
 ```
 
-## Import ChatComponent from "react-chat-sdk"
+## Getting Started
 
 ```bash
+import ChatComponent from "react-chat-sdk"
+
 <ChatComponent
   serverUrl={{
     chatURL: "API endpoint that fetches history",

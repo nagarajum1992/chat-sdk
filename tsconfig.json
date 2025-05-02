@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
     "baseUrl": "./src/",
-    "target": "esnext",
     "lib": ["DOM", "ES6", "DOM.Iterable", "ScriptHost", "ES2016.Array.Include"],
+    "declaration": true,
+    "declarationDir": "./dist/types", // Output folder for .d.ts files
     "types": ["react"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -15,12 +16,9 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "declaration": true,
-    "declarationDir": "dist/types",
-    "emitDeclarationOnly": false,
-    "outDir": "dist"
+    "emitDeclarationOnly": true, // Only emit declaration files (.d.ts)
+    "outDir": "dist", // Output folder for all build files
+    "jsx": "react-jsx"
   },
-  "include": ["src"]
+  "include": ["src/**/*"]
 }
