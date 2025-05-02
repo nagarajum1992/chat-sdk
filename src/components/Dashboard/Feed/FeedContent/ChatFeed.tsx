@@ -8,6 +8,7 @@ import AudoVisualiser from "../../../VoiceRecorder/AudoVisualiser";
 import BouncingDotsLoader from "../../../Loaders/DotsLoading";
 import chatService from "../../../../services/chatService";
 import { ChatComponentProps } from "../../../../models/IChatComponent";
+import SendIcon from "../../../../../public/assets/send-white.svg"
 
 export default function ChatFeed({
   serverUrl,
@@ -451,7 +452,7 @@ export default function ChatFeed({
             >
               <img
                 alt="signup background"
-                src={`/assets/send-white.svg`}
+                src={SendIcon}
                 style={{ flexShrink: 0 }}
               />
             </IconButton>

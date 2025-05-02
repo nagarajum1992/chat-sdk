@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import AnimatedMarkdown from "./AnimatedMarkdown";
+import AIIcon from "../../../../../public/assets/ai_icon.svg"
 
 export default function ChatCard({ chatData, scrollRef, userId }: any) {
   const isReply = chatData?.user_type === "user";
@@ -25,7 +26,7 @@ export default function ChatCard({ chatData, scrollRef, userId }: any) {
             <div>
               <img
                 alt="signup background"
-                src={`/assets/ai_icon.svg`}
+                src={AIIcon}
                 style={{ flexShrink: 0 }}
               />
             </div>
