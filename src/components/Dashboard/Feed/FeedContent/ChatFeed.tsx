@@ -6,8 +6,8 @@ import ChatLoading from "../../../Loaders/ChatLoading";
 import ChatCard from "./ChatCard";
 import AudoVisualiser from "../../../VoiceRecorder/AudoVisualiser";
 import BouncingDotsLoader from "../../../Loaders/DotsLoading";
-import { ChatComponentProps } from "models/IChatComponent";
 import chatService from "../../../../services/chatService";
+import { ChatComponentProps } from "../../../../models/IChatComponent";
 
 export default function ChatFeed({
   serverUrl,

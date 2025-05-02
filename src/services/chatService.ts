@@ -1,4 +1,4 @@
-import { CreateAxiosInstanceProps } from "models/IChatComponent";
+import { CreateAxiosInstanceProps } from "../models/IChatComponent";
 import { createAxiosInstance } from "./axiosInstance";
 
 class ChatService {

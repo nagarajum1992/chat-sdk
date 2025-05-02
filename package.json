@@ -12,18 +12,19 @@
     "dev": "vite",
     "build": "BUILD=true vite build",
     "types": "tsc --emitDeclarationOnly",
-    "prepare": "yarn build && yarn types",
-    "build-storybook": "storybook build"
+    "prepare": "yarn build && yarn types"
   },
   "peerDependencies": {
-    "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@vitejs/plugin-react": "^5.0.0",
     "add": "^2.0.6",
+    "react": "^18.2.0",
+  "react-dom": "^18.2.0",
     "typescript": "^5.0.0",
     "vite": "^5.0.0",
     "vite-plugin-svgr": "^4.3.0",

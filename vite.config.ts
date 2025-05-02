@@ -7,7 +7,7 @@ const isLibMode = process.env.BUILD === "true";
 
 export default defineConfig({
   plugins: [react(), svgr()],
-  root: isLibMode ? undefined : "playground", // serve playground in dev
+  root: isLibMode ? undefined : "playground",
   build: isLibMode
     ? {
         lib: {
@@ -17,7 +17,7 @@ export default defineConfig({
           formats: ["es", "umd"],
         },
         rollupOptions: {
-          external: ["react", "react-dom", "react/jsx-runtime"],
+          external: ["react", "react-dom", "react/jsx-runtime"], // ✅ critical
           output: {
             globals: {
               react: "React",

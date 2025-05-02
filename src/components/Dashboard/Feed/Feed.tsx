@@ -1,6 +1,6 @@
 import { Box, Toolbar } from "@mui/material";
 import ChatFeed from "./FeedContent/ChatFeed";
-import { ChatComponentProps } from "models/IChatComponent";
+import { ChatComponentProps } from "../../../models/IChatComponent";
 
 export default function Feed({ ...props }: ChatComponentProps) {
   return (

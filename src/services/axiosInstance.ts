@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { CreateAxiosInstanceProps } from "models/IChatComponent";
+import { CreateAxiosInstanceProps } from "../models/IChatComponent";
 
 export const createAxiosInstance = ({
   serverUrl,

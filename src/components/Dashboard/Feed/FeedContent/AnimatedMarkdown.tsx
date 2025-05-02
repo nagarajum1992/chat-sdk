@@ -3,12 +3,12 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 
-const AnimatedMarkdown = ({
+export default function AnimatedMarkdown({
   openAiData,
   userId,
   isnewMessage = false,
   scrollRef = null,
-}) => {
+}: any) {
   const [displayedText, setDisplayedText] = useState("");
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const AnimatedMarkdown = ({
     }
   }, [openAiData, isnewMessage]);
 
-  const redirectToURL = (href) => {
+  const redirectToURL = (href: any) => {
     if (href.includes("jap-sb.soham")) {
       const dashboard2 = window.open(href, "_blank");
 
@@ -75,7 +75,7 @@ const AnimatedMarkdown = ({
           }
 
           // Test access to contentWindow – triggers error if still loading or cross-origin
-          dashboard2?.postMessage && sendAuthData();
+          sendAuthData();
           clearInterval(interval);
         } catch (e) {
           // wait for window to be ready
@@ -161,6 +161,4 @@ const AnimatedMarkdown = ({
       />
     </div>
   );
-};
-
-export default AnimatedMarkdown;
+}

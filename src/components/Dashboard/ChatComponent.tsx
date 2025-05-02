@@ -3,7 +3,7 @@ import Feed from "./Feed/Feed";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { Box } from "@mui/material";
-import { ChatComponentProps } from "models/IChatComponent";
+import { ChatComponentProps } from "../../models/IChatComponent";
 
 dayjs.extend(utc);
 dayjs.utc();
