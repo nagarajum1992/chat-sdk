@@ -41,6 +41,7 @@ class ChatService {
   audio_transcribe = async (
     audioFile: any,
     user_id: string,
+    lang_code: string,
     options: CreateAxiosInstanceProps
   ) => {
     const axiosClient = createAxiosInstance(options);
@@ -49,7 +50,7 @@ class ChatService {
 
       formdata.append("audio", audioFile?.blob, "recording.webm");
       formdata.append("user_id", user_id);
-      formdata.append("provider", "openai");
+      formdata.append("src_lang", lang_code || "en-IN");
       // 'provider': 'openai',
 
       const data = await axiosClient.post(options.serverUrl, formdata, {

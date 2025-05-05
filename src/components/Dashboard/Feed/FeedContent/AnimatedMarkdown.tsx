@@ -3,12 +3,19 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 
+type AnimatedProps = {
+  openAiData: string;
+  userId: string;
+  isnewMessage: boolean | undefined;
+  scrollRef: any;
+};
+
 export default function AnimatedMarkdown({
   openAiData,
   userId,
   isnewMessage = false,
   scrollRef = null,
-}: any) {
+}: AnimatedProps) {
   const [displayedText, setDisplayedText] = useState("");
 
   useEffect(() => {
@@ -18,35 +25,41 @@ export default function AnimatedMarkdown({
         ?.replace(/\\t/g, "")
         ?.replace(/\\\\/g, "\\") || "";
 
-    if (isnewMessage) {
-      setDisplayedText("");
-      let index = 0;
+    setDisplayedText(formatted);
 
-      const interval = setInterval(() => {
-        setDisplayedText((prev) => {
-          const next = prev + formatted[index];
-          index++;
+    // const characters = Array.from(formatted);
+    // let index = 0;
 
-          // Scroll after DOM updates
-          requestAnimationFrame(() => {
-            if (scrollRef?.current) {
-              scrollRef.current.scrollIntoView({ behavior: "smooth" });
-            }
-          });
+    // if (isnewMessage) {
+    //   setDisplayedText("");
 
-          if (index >= formatted.length) clearInterval(interval);
-          return next;
-        });
-      }, 10);
+    //   const interval = setInterval(() => {
+    //     if (index < characters.length) {
+    //       setDisplayedText((prev) => {
+    //         const next = prev + characters[index];
+    //         index++;
 
-      return () => clearInterval(interval);
-    } else {
-      setDisplayedText(formatted);
-    }
+    //         requestAnimationFrame(() => {
+    //           if (scrollRef?.current) {
+    //             scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    //           }
+    //         });
+
+    //         return next;
+    //       });
+    //     } else {
+    //       clearInterval(interval);
+    //     }
+    //   }, 10);
+
+    //   return () => clearInterval(interval);
+    // } else {
+    //   setDisplayedText(formatted);
+    // }
   }, [openAiData, isnewMessage]);
 
-  const redirectToURL = (href: any) => {
-    if (href.includes("jap-sb.soham")) {
+  const redirectToURL = (href: string | undefined) => {
+    if (href?.includes("jap-sb.soham")) {
       const dashboard2 = window.open(href, "_blank");
 
       if (!dashboard2) {
@@ -90,7 +103,7 @@ export default function AnimatedMarkdown({
   };
 
   return (
-    <div style={{ fontFamily: "Manrope" }}>
+    <div>
       <ReactMarkdown
         children={displayedText}
         remarkPlugins={[remarkGfm]}

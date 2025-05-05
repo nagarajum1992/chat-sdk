@@ -12,8 +12,8 @@ yarn add react-chat-sdk
 
 ## Getting Started
 
-```bash
-import ChatComponent from "react-chat-sdk"
+```js
+import ChatComponent from "react-chat-sdk";
 
 <ChatComponent
   serverUrl={{
@@ -26,29 +26,32 @@ import ChatComponent from "react-chat-sdk"
   }}
   userName={"Full Name"}
   userId={"Mail ID"}
-/>
-
+/>;
 ```
 
-## Request and response for chaturl that fetches history
+## Request and response for chaturl that fetches history (chatURL)
 
-```bash
-Request
+```json
 
-user_id: mail-id
-page: 1
-page_size: 10
-order: desc
+Request params (which already being sent from sdk)
+
+{
+"user_id": "mail-id",
+"page": 1,
+"page_size": 10,
+"order": "desc"
+}
 
 Response
 
-{
-history:[{
+"data": {
+        "history": [
+            {
                 "id": "uuid",
                 "session_id": "uuid",
                 "user_id": "mail-id",
-                "agent_id": number type,
-                "user_type": "string",
+                "agent_id": 0,
+                "user_type": "agent || user",
                 "action_type": "",
                 "message_type": "text",
                 "message": "",
@@ -56,7 +59,37 @@ history:[{
                 "created_at": "",
                 "parent_message_id": "",
                 "message_read": false
-            }],
-total:`total items`
-}
+            }
+        ],
+        "total": 58
+    },
 ```
+
+## Options
+
+```js
+
+serverUrl={{
+        chatURL:
+          "url that fetches history",
+        audioURL:
+          "audio url that translate audio",
+        audioOutputURL:
+          "url that gives audio transcript should be wav file",
+        webSocketURL:
+          "url?user_id=example@gmail.comi&agent_id=0",
+      }}
+      headers={{
+        Authorization: `Bearer token`,
+      }}
+      userName={"Full Name"}
+      userId={"example@gmail.com"}
+      entityId={"uuid"}
+      showLanguageSelector={false}
+      format={"engToEng | regLangToEng | regLangToRegLang | regLangToBoth"}
+```
+
+engToEng, // English Input -> English Output
+regLangToEng, // Regional Language Input -> English Output
+regLangToRegLang, // Regional Language Input -> Regional Language Output
+regLangToBoth, // Regional Language Input -> Both English & Regional Language Output

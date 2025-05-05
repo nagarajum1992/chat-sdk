@@ -8,7 +8,8 @@ import AudoVisualiser from "../../../VoiceRecorder/AudoVisualiser";
 import BouncingDotsLoader from "../../../Loaders/DotsLoading";
 import chatService from "../../../../services/chatService";
 import { ChatComponentProps } from "../../../../models/IChatComponent";
-import SendIcon from "../../../../../public/assets/send-white.svg"
+import SendIcon from "../../../../../public/assets/send-white.svg";
+import { v4 as uuidv4 } from "uuid";
 
 export default function ChatFeed({
   serverUrl,
@@ -16,6 +17,8 @@ export default function ChatFeed({
   headers,
   entityId,
   userName,
+  languageCode,
+  formatSelected,
 }: ChatComponentProps) {
   const [message, setMessage] = useState<any>({
     language_code: "",
@@ -107,8 +110,16 @@ export default function ChatFeed({
   }, []);
 
   useEffect(() => {
-    getChatHistory();
+    if (page > 1) {
+      getChatHistory();
+    }
   }, [page]);
+
+  useEffect(() => {
+    if (connected) {
+      getChatHistory();
+    }
+  }, [connected]);
 
   useEffect(() => {
     if (lastMessage !== null) {
@@ -128,6 +139,7 @@ export default function ChatFeed({
           {
             user_type: receivedData?.user_type,
             message: receivedData?.agent_response?.message,
+            audio_storage_prefix: receivedData?.audio_storage_prefix,
             isNewmessage: true,
           },
         ]);
@@ -140,12 +152,13 @@ export default function ChatFeed({
   }, [lastMessage]);
 
   useEffect(() => {
-    debugger;
     if (chatHistory?.history?.length > 0) {
       const newChatList = chatHistory?.history.map((chat: any) => ({
         ...chat,
       }));
-      setChaList([...chatList, ...newChatList]);
+      let finalArray = [...chatList, ...newChatList];
+      finalArray = removeDuplicates(finalArray);
+      setChaList(finalArray);
       if (chatHistory?.history?.length < 10) {
         setHasMore(false);
       }
@@ -153,7 +166,20 @@ export default function ChatFeed({
     }
   }, [chatHistory?.history?.length]);
 
+  const removeDuplicates = (arr: any[]) => {
+    const seen = new Set();
+    return arr.reduce((uniqueArr: any[], currentItem: any) => {
+      if (!seen.has(currentItem.id)) {
+        seen.add(currentItem.id);
+        uniqueArr.push(currentItem);
+      }
+
+      return uniqueArr;
+    }, []);
+  };
+
   const getChatHistory = () => {
+    setLoading(true);
     chatService
       .getChatHistory(userId!, page.toString(), "10", "desc", {
         serverUrl: serverUrl.chatURL,
@@ -161,12 +187,17 @@ export default function ChatFeed({
       })
       .then((res) => {
         setChatHistory({ ...chatHistory, history: res.data.history });
+        setLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
   };
 
   const onSubmitAudioRecord = async (newAudioFile: any) => {
     setMessage({
+      audio_enabled: false,
       language_code: "",
       provider: "",
       message: "",
@@ -176,15 +207,18 @@ export default function ChatFeed({
     const response: any = await chatService.audio_transcribe(
       newAudioFile,
       userId!,
+      languageCode?.value!,
       { serverUrl: serverUrl.audioURL!, headers: headers }
     );
 
     if (!response?.error)
       setMessage({
         ...message,
+        audio_enabled: true,
         language_code: response.language_code,
         provider: response.provider,
-        message: response.transcript,
+        message: response.translation,
+        translated_message: response.transcript,
       });
 
     setAudioLoading(false);
@@ -216,16 +250,20 @@ export default function ChatFeed({
       {
         user_type: "user",
         message: message.message,
+        id: uuidv4(),
       },
     ]);
 
     let messageData: any = {
       user_id: userId!,
       query: message.message,
-      entity_id: entityId!,
+      transcript_query: message.translated_message || "",
+      entity_id: entityId || "",
       agent_id: 223,
       type: "agent_chat",
       agent_type: "",
+      audio_enabled: message.audio_enabled || false,
+      language_code: message.language_code || "en-IN",
     };
 
     try {
@@ -349,11 +387,12 @@ export default function ChatFeed({
             .map((eachMessage: any, index: number) => (
               <ChatCard
                 key={index}
-                isItLastCard={index === chatList?.length - 1}
-                frStatus={""}
                 chatData={eachMessage}
                 scrollRef={messageRef}
                 userId={userId}
+                serverUrl={serverUrl}
+                headers={headers}
+                formatSelected={formatSelected}
               />
             ))}
           {(loading || chatHistory.isLoading) && <ChatLoading />}
