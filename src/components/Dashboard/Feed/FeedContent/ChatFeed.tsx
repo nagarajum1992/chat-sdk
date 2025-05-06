@@ -220,8 +220,8 @@ export default function ChatFeed({
         audio_enabled: true,
         language_code: response.language_code,
         provider: response.provider,
-        message: response.translation,
-        translated_message: response.transcript,
+        message: response.transcript,
+        translated_message: response.translation,
       });
 
     setAudioLoading(false);
@@ -252,15 +252,20 @@ export default function ChatFeed({
       ...chatList,
       {
         user_type: "user",
-        message: message.message,
+        message: message.audio_enabled
+          ? message.translated_message
+          : message.message,
+        translated_message: message.audio_enabled ? message.message : "",
         id: uuidv4(),
       },
     ]);
 
     let messageData: any = {
       user_id: userId!,
-      query: message.message,
-      transcript_query: message.translated_message || "",
+      query: message.audio_enabled
+        ? message.translated_message
+        : message.message,
+      transcript_query: message.audio_enabled ? message.message : "",
       entity_id: entityId || "",
       agent_id: 223,
       type: "agent_chat",

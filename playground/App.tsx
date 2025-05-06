@@ -8,7 +8,7 @@ function App() {
         chatURL:
           "https://dwyte-gcp-dev.soham.ai/agent-conversation-service/v1/get_conversation_history",
         audioURL:
-          "https://dwyte-gcp-dev.soham.ai/agent-conversation-service/v1/speech-to-text-translate ",
+          "https://dwyte-gcp-dev.soham.ai/agent-conversation-service/v1/speech-to-text-translate",
         audioOutputURL:
           "https://dwyte-gcp-dev.soham.ai/agent-conversation-service/v1/get_agent_audio",
         webSocketURL:
