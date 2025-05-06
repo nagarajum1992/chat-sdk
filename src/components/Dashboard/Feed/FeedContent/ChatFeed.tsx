@@ -139,7 +139,10 @@ export default function ChatFeed({
           {
             user_type: receivedData?.user_type,
             message: receivedData?.agent_response?.message,
-            audio_storage_prefix: receivedData?.audio_storage_prefix,
+            translated_message:
+              receivedData?.agent_response?.translated_message,
+            audio_storage_prefix:
+              receivedData?.agent_response?.audio_storage_prefix,
             isNewmessage: true,
           },
         ]);

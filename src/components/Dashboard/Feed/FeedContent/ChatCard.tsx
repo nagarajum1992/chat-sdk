@@ -81,7 +81,7 @@ export default function ChatCard({ ...props }: any) {
               )}
               {formatSelected === "regLangToRegLang" && (
                 <AnimatedMarkdown
-                  openAiData={chatData?.transcript_query}
+                  openAiData={chatData?.translated_message}
                   isnewMessage={chatData?.isNewmessage}
                   scrollRef={scrollRef}
                   userId={userId}
